@@ -19,7 +19,6 @@ type Lexer struct {
 func (l Lexer) Tokenise(r io.Reader) ([]string, error) {
 	lines := []string{}
 	scanner := bufio.NewScanner(r)
-	no := 1
 	var buffer bytes.Buffer
 	for scanner.Scan() {
 		if strings.HasPrefix(scanner.Text(), "#") {
@@ -53,7 +52,6 @@ func (l Lexer) Tokenise(r io.Reader) ([]string, error) {
 				}
 			}
 		}
-		no++
 	}
 	if len(buffer.String()) > 0 {
 		// the last continuation was not closed: this is an error
