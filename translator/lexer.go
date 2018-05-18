@@ -1,4 +1,4 @@
-package parser
+package translator
 
 import (
 	"bufio"
@@ -8,12 +8,15 @@ import (
 	"strings"
 )
 
-// Parser is the type representing a Parser.
-type Parser struct {
+// Lexer is the type representing a Dockerfile analyser capable of extracting
+// tokens from the inpu file or stream; it skips comments and reconstructs
+// instructions even when continued on multiple lines.
+type Lexer struct {
 }
 
-// Parse parses a Dockerfile line by line, assembling continued lines.
-func (p Parser) Parse(r io.Reader) ([]string, error) {
+// Tokenise scans a Dockerfile line by line, assembling continued lines as
+// instructions.
+func (l Lexer) Tokenise(r io.Reader) ([]string, error) {
 	lines := []string{}
 	scanner := bufio.NewScanner(r)
 	no := 1

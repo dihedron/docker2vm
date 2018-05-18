@@ -6,11 +6,13 @@ import (
 	"log"
 	"os"
 
-	"github.com/dihedron/docker2vm/parser"
+	"github.com/dihedron/docker2vm/translator"
 )
 
 //
-// docker2vm [file]
+// docker2vm [Dockerfile]
+//
+// cat Dockerfile | docker2vm
 //
 func main() {
 
@@ -25,10 +27,9 @@ func main() {
 		reader = os.Stdin
 	}
 
-	parser := &parser.Parser{}
-	instructions, _ := parser.Parse(reader)
+	lexer := &translator.Lexer{}
+	instructions, _ := lexer.Tokenise(reader)
 	for i, instruction := range instructions {
 		fmt.Printf("[%3d] %s\n", i, instruction)
 	}
-
 }
