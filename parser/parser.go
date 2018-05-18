@@ -19,7 +19,6 @@ func (p Parser) Parse(r io.Reader) ([]string, error) {
 	no := 1
 	var buffer bytes.Buffer
 	for scanner.Scan() {
-		//fmt.Println("read: ", scanner.Text())
 		if strings.HasPrefix(scanner.Text(), "#") {
 			// this is a comment, skip it
 		} else if len(buffer.String()) > 0 {
