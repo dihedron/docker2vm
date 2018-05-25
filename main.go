@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"os"
 
@@ -16,19 +15,20 @@ import (
 //
 func main() {
 
-	var reader io.Reader
+	var stream *os.File
 	if len(os.Args) > 1 {
-		reader, err := os.Open(os.Args[1])
+		var err error
+		stream, err = os.Open(os.Args[1])
 		if err != nil {
 			log.Fatal(err)
 		}
-		defer reader.Close()
+		defer stream.Close()
 	} else {
-		reader = os.Stdin
+		stream = os.Stdin
 	}
 
-	lexer := &translator.Lexer{}
-	instructions, _ := lexer.Tokenise(reader)
+	reader := &translator.Reader{}
+	instructions, _ := reader.Read(stream)
 	for i, instruction := range instructions {
 		fmt.Printf("[%3d] %s\n", i, instruction)
 	}

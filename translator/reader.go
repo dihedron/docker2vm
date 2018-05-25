@@ -8,15 +8,16 @@ import (
 	"strings"
 )
 
-// Lexer is the type representing a Dockerfile analyser capable of extracting
-// tokens from the inpu file or stream; it skips comments and reconstructs
-// instructions even when continued on multiple lines.
-type Lexer struct {
+// Reader is the type representing a Dockerfile analyser capable of extracting
+// lines from the input file or stream; it skips comments and reconstructs
+// instructions even when continued on multiple lines; note that comments can be
+// embedded inside continued lines.
+type Reader struct {
 }
 
-// Tokenise scans a Dockerfile line by line, assembling continued lines as
-// instructions.
-func (l Lexer) Tokenise(r io.Reader) ([]string, error) {
+// Read scans a Dockerfile line by line, assembling continued lines as
+// instructions; comments are skipped.
+func (l Reader) Read(r io.Reader) ([]string, error) {
 	lines := []string{}
 	scanner := bufio.NewScanner(r)
 	var buffer bytes.Buffer
