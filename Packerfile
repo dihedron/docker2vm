@@ -1,7 +1,16 @@
 FROM ubuntu
 from 12345678-90ab-cdef-1234-567890ABCDEF
 FLAVOUR m1.xlarge
-MAINTAINER Kimbro Staken 
+MAINTAINER Kimbro Staken <kimbro@example.com>
+LABEL "com.example.vendor"="ACME Incorporated"
+LABEL com.example.label-with-value="foo"
+LABEL version="1.0"
+LABEL description="This text illustrates \
+that label-values can span multiple lines."
+LABEL multi.label1="value1" multi.label2="value2" other="value3"
+LABEL multi.label1="value1" \
+      multi.label2="value2" \
+      other="value3"
 RUN apt-get install -y python-software-properties python python-setuptools ruby rubygems
 RUN add-apt-repository ppa:chris-lea/node.js
 RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ precise universe" >> /etc/apt/sources.list

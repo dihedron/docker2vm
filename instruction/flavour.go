@@ -18,13 +18,17 @@ type Flavour struct {
 	// launching the VM; even though the OpenStack Compute API has flavour IDs,
 	// these have no defined format (they're just plain strings, and by default
 	// are UUIDs), so they're indistinguishable from the name.
-	FlavourName *string
+	FlavourName string
 }
 
-func (f *Flavour) Init(instruction string) (Instruction, error) {
-	f.Token = instruction
-	matches := FLAVOUR.FindStringSubmatch(f.Token)
-	f.FlavourName = &matches[2]
-	log.Infof("FLAVOUR: using flavour: %q", *f.FlavourName)
-	return f, nil
+// newFlavour creates a new Flavour instruction and initilises it using
+// information in the token via the associated regular expression.
+func newFlavour(instruction string) (Instruction, error) {
+	i := &Flavour{
+		Token: instruction,
+	}
+	matches := FLAVOUR.FindStringSubmatch(i.Token)
+	i.FlavourName = matches[2]
+	log.Infof("FLAVOUR: using flavour: %q", i.FlavourName)
+	return i, nil
 }

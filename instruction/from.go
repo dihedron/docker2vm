@@ -19,16 +19,20 @@ type From struct {
 	ImageID *string
 }
 
-func (f *From) Init(instruction string) (Instruction, error) {
-	f.Token = instruction
-	matches := FROM.FindStringSubmatch(f.Token)
+// newFrom creates a new From instruction and initilises it using information in
+// the token via the associated regular expression.
+func newFrom(instruction string) (Instruction, error) {
+	i := &From{
+		Token: instruction,
+	}
+	matches := FROM.FindStringSubmatch(i.Token)
 	re := regexp.MustCompile(`^\s*(?i)([0-9a-fA-f]{8}-[0-9a-fA-f]{4}-[0-9a-fA-f]{4}-[0-9a-fA-f]{4}-[0-9a-fA-f]{12})(?-i)\s*$`)
 	if re.MatchString(matches[2]) {
-		f.ImageID = &matches[2]
-		log.Infof("FROM: using image id: %q", *f.ImageID)
+		i.ImageID = &matches[2]
+		log.Infof("FROM: using image id: %q", *i.ImageID)
 	} else {
-		f.ImageName = &matches[2]
-		log.Infof("FROM: using image name: %q", *f.ImageName)
+		i.ImageName = &matches[2]
+		log.Infof("FROM: using image name: %q", *i.ImageName)
 	}
-	return f, nil
+	return i, nil
 }
