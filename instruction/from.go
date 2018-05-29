@@ -7,7 +7,7 @@ import (
 )
 
 // FROM is the pattern for the FROM instruction.
-var FROM = regexp.MustCompile(`^\s*(?i)(from)(?-i)\s+([-a-zA-Z0-9]+)\s*$`)
+var FROM = regexp.MustCompile(`^\s*(?i)(?:from)(?-i)\s+([-a-zA-Z0-9]+)\s*$`)
 
 // From represents the FROM instruction in Packerfile/Dockerfile format.
 type From struct {
@@ -27,11 +27,11 @@ func newFrom(token string) ([]Instruction, error) {
 	}
 	matches := FROM.FindStringSubmatch(instruction.Token)
 	re := regexp.MustCompile(`^\s*(?i)([0-9a-fA-f]{8}-[0-9a-fA-f]{4}-[0-9a-fA-f]{4}-[0-9a-fA-f]{4}-[0-9a-fA-f]{12})(?-i)\s*$`)
-	if re.MatchString(matches[2]) {
-		instruction.ImageID = &matches[2]
+	if re.MatchString(matches[1]) {
+		instruction.ImageID = &matches[1]
 		log.Infof("FROM: using image id: %q", *instruction.ImageID)
 	} else {
-		instruction.ImageName = &matches[2]
+		instruction.ImageName = &matches[1]
 		log.Infof("FROM: using image name: %q", *instruction.ImageName)
 	}
 	return []Instruction{instruction}, nil

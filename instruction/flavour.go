@@ -7,7 +7,7 @@ import (
 )
 
 // FLAVOUR is the pattern for the FLAVOUR instruction.
-var FLAVOUR = regexp.MustCompile(`^\s*(?i)(flavour)(?-i)\s+([-a-zA-Z0-9\.]+)\s*$`)
+var FLAVOUR = regexp.MustCompile(`^\s*(?i)(?:flavour)(?-i)\s+([-a-zA-Z0-9\.]+)\s*$`)
 
 // Flavour represents the FLAVOUR instruction in Packerfile format; this instruction
 // does not exist in the Dockerfile schema.
@@ -28,7 +28,7 @@ func newFlavour(token string) ([]Instruction, error) {
 		Token: token,
 	}
 	matches := FLAVOUR.FindStringSubmatch(instruction.Token)
-	instruction.FlavourName = matches[2]
+	instruction.FlavourName = matches[1]
 	log.Infof("FLAVOUR: using flavour: %q", instruction.FlavourName)
 	return []Instruction{instruction}, nil
 }

@@ -8,15 +8,14 @@ import (
 
 // MAINTAINER is the pattern for the MAINTAINER instruction, which is regarded as
 // a special (deprecated) case of a Label, with a fixed key "maintainer".
-//var MAINTAINER = regexp.MustCompile(`^\s*(?i)(maintainer)(?-i)\s+([a-zA-Z0-9\._@<>\(\)]+)\s*$`)
-var MAINTAINER = regexp.MustCompile(`^\s*(?i)(maintainer)(?-i)\s+(.*)\s*$`)
+var MAINTAINER = regexp.MustCompile(`^\s*(?i)(?:maintainer)(?-i)\s+(.*)\s*$`)
 
 // LABEL is the pattern for the LABEL instruction, which is a flexible way to
 // store tags in a VM image.
-//var LABEL = regexp.MustCompile(`^\s*(?i)(label)(?-i)\s+(.*)\s*$`)
-var LABEL = regexp.MustCompile(`^\s*(?i)(?:label)(?-i)\s+(?:(?:"{0,1})([^"]*)(?:"{0,1})="([^"]*)")+\s*$`)
+var LABEL = regexp.MustCompile(`^\s*(?i)(?:label)(?-i)\s+(.*)\s*$`)
 
-//var LABELTAGS = regexp.MustCompile(`(.*)="(.*)"`)
+// ITEM represents a single key/value pair (a label) in a LABEL instruction.
+var ITEM = regexp.MustCompile(`\s*(?:(?:"{0,1})([^"]*)(?:"{0,1})="([^"]*)")`)
 
 // Label represents the LABEL and MAINTAINER instructions in Packerfile format;
 // the MAINTAINER instruction is still quite commonly used in Dockerfiles but
@@ -40,7 +39,7 @@ func newMaintainer(token string) ([]Instruction, error) {
 		Key:   "maintainer",
 	}
 	matches := MAINTAINER.FindStringSubmatch(instruction.Token)
-	instruction.Value = matches[2]
+	instruction.Value = matches[1]
 	log.Warnf("MAINTAINER: using deprecated maintainer: %q => %q", instruction.Key, instruction.Value)
 	return []Instruction{instruction}, nil
 }
@@ -50,21 +49,15 @@ func newMaintainer(token string) ([]Instruction, error) {
 func newLabel(token string) ([]Instruction, error) {
 	instructions := []Instruction{}
 	matches := LABEL.FindStringSubmatch(token)
-	for i, match := range matches {
-		log.Infof("match[%d] => %q", i, match)
-	}
-	/*
-		log.Infof("match: %q", matches[2])
-		//pairs := LABELTAGS.FindAllStringSubmatch(matches[2], -1)
-		for _, pair := range pairs {
-			instruction := &Label{
-				Token: token,
-			}
-			log.Infof(" - submatch: %q => %q", pair[0], pair[1])
-			instructions = append(instructions, instruction)
+	labels := ITEM.FindAllStringSubmatch(matches[1], -1)
+	for _, label := range labels {
+		instruction := &Label{
+			Token: token,
+			Key:   label[1],
+			Value: label[2],
 		}
-		//i.Value = matches[2]
-		//log.Infof("LABEL: using deprecated maintainer: %q => %q", i.Key, i.Value)
-	*/
+		instructions = append(instructions, instruction)
+		log.Infof("LABEL: adding label: %q => %q", instruction.Key, instruction.Value)
+	}
 	return instructions, nil
 }
