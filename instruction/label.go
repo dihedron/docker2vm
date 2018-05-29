@@ -25,13 +25,13 @@ var ITEM = regexp.MustCompile(`\s*(?:(?:"{0,1})([^"]*)(?:"{0,1})="([^"]*)")`)
 type Label struct {
 	// Token is the bare of the instruction, as returned by the Lexer.
 	Token string
-	// Value is a the value associated with the Label.
+	// Key is the name of the Label.
 	Key string
-	// Value is a the value associated with the Label.
+	// Value is the value associated with the Label.
 	Value string
 }
 
-// newMaintainer creates a new Label instruction and initilises it using
+// newMaintainer creates a new Label instruction and initialises it using
 // information extracted from the token via the associated regular expression.
 func newMaintainer(token string) ([]Instruction, error) {
 	instruction := &Label{

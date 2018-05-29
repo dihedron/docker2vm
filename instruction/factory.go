@@ -27,6 +27,9 @@ func New(index int, token string) ([]Instruction, error) {
 	} else if LABEL.MatchString(token) {
 		log.Debugf("found LABEL instruction")
 		return newLabel(token)
+	} else if RUN.MatchString(token) {
+		log.Debugf("found RUN instruction")
+		return newRun(token)
 	}
 	return nil, fmt.Errorf("invalid instruction at line %d: %q", index, token)
 }
