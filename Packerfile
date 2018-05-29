@@ -1,6 +1,6 @@
+FROM ubuntu AS m1.xlarge
 FROM ubuntu
-from 12345678-90ab-cdef-1234-567890ABCDEF
-FLAVOUR m1.xlarge
+from 12345678-90ab-cdef-1234-567890ABCDEF AS m1.xsmall
 MAINTAINER Kimbro Staken <kimbro@example.com>
 LABEL "com.example.vendor"="ACME Incorporated"
 LABEL com.example.label-with-value="foo"
@@ -23,6 +23,9 @@ RUN apt-get -y install mongodb-10gen
 RUN easy_install supervisor
 RUN echo_supervisord_conf > /etc/supervisord.conf
 RUN printf "[include]\nfiles = /var/www/Supervisorfile\n" >> /etc/supervisord.conf
+RUN /bin/bash -c 'source $HOME/.bashrc; \
+echo $HOME'
+RUN ["/bin/bash", "-c", "echo hello"]
 ADD . /var/www
 RUN cd /var/www ; npm install 
 CMD ["/usr/local/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"] 

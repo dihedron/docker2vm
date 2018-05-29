@@ -18,9 +18,6 @@ func New(index int, token string) ([]Instruction, error) {
 	if FROM.MatchString(token) {
 		log.Debugf("found FROM instruction")
 		return newFrom(token)
-	} else if FLAVOUR.MatchString(token) {
-		log.Debugf("found FLAVOUR instruction")
-		return newFlavour(token)
 	} else if MAINTAINER.MatchString(token) {
 		log.Debugf("found MAINTAINER instruction")
 		return newMaintainer(token)
