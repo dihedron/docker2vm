@@ -23,12 +23,12 @@ type Flavour struct {
 
 // newFlavour creates a new Flavour instruction and initilises it using
 // information in the token via the associated regular expression.
-func newFlavour(instruction string) (Instruction, error) {
-	i := &Flavour{
-		Token: instruction,
+func newFlavour(token string) ([]Instruction, error) {
+	instruction := &Flavour{
+		Token: token,
 	}
-	matches := FLAVOUR.FindStringSubmatch(i.Token)
-	i.FlavourName = matches[2]
-	log.Infof("FLAVOUR: using flavour: %q", i.FlavourName)
-	return i, nil
+	matches := FLAVOUR.FindStringSubmatch(instruction.Token)
+	instruction.FlavourName = matches[2]
+	log.Infof("FLAVOUR: using flavour: %q", instruction.FlavourName)
+	return []Instruction{instruction}, nil
 }

@@ -21,18 +21,18 @@ type From struct {
 
 // newFrom creates a new From instruction and initilises it using information in
 // the token via the associated regular expression.
-func newFrom(instruction string) (Instruction, error) {
-	i := &From{
-		Token: instruction,
+func newFrom(token string) ([]Instruction, error) {
+	instruction := &From{
+		Token: token,
 	}
-	matches := FROM.FindStringSubmatch(i.Token)
+	matches := FROM.FindStringSubmatch(instruction.Token)
 	re := regexp.MustCompile(`^\s*(?i)([0-9a-fA-f]{8}-[0-9a-fA-f]{4}-[0-9a-fA-f]{4}-[0-9a-fA-f]{4}-[0-9a-fA-f]{12})(?-i)\s*$`)
 	if re.MatchString(matches[2]) {
-		i.ImageID = &matches[2]
-		log.Infof("FROM: using image id: %q", *i.ImageID)
+		instruction.ImageID = &matches[2]
+		log.Infof("FROM: using image id: %q", *instruction.ImageID)
 	} else {
-		i.ImageName = &matches[2]
-		log.Infof("FROM: using image name: %q", *i.ImageName)
+		instruction.ImageName = &matches[2]
+		log.Infof("FROM: using image name: %q", *instruction.ImageName)
 	}
-	return i, nil
+	return []Instruction{instruction}, nil
 }

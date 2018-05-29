@@ -14,18 +14,21 @@ type Instruction interface {
 	// more methods here
 }
 
-func New(index int, instruction string) (Instruction, error) {
-	if FROM.MatchString(instruction) {
+func New(index int, token string) ([]Instruction, error) {
+	if FROM.MatchString(token) {
 		log.Debugf("found FROM instruction")
-		return newFrom(instruction)
-	} else if FLAVOUR.MatchString(instruction) {
+		return newFrom(token)
+	} else if FLAVOUR.MatchString(token) {
 		log.Debugf("found FLAVOUR instruction")
-		return newFlavour(instruction)
-	} else if MAINTAINER.MatchString(instruction) {
+		return newFlavour(token)
+	} else if MAINTAINER.MatchString(token) {
 		log.Debugf("found MAINTAINER instruction")
-		return newMaintainer(instruction)
+		return newMaintainer(token)
+	} else if LABEL.MatchString(token) {
+		log.Debugf("found LABEL instruction")
+		return newLabel(token)
 	}
-	return nil, fmt.Errorf("invalid instruction at line %d: %q", index, instruction)
+	return nil, fmt.Errorf("invalid instruction at line %d: %q", index, token)
 }
 
 var ()
