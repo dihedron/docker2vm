@@ -1,6 +1,7 @@
 package instruction
 
 import (
+	"bytes"
 	"regexp"
 	"strings"
 
@@ -25,6 +26,22 @@ type From struct {
 	// these have no defined format (they're just plain strings, and by default
 	// are UUIDs), so they're indistinguishable from the name.
 	FlavourName string
+}
+
+// String returns the From structure as a string.
+func (f From) String() string {
+	var buffer bytes.Buffer
+	buffer.WriteString("FROM ")
+	if f.ImageID != nil {
+		buffer.WriteString(*f.ImageID)
+	} else if f.ImageName != nil {
+		buffer.WriteString(*f.ImageName)
+	}
+	if len(f.FlavourName) > 0 {
+		buffer.WriteString(" AS ")
+		buffer.WriteString(f.FlavourName)
+	}
+	return buffer.String()
 }
 
 // newFrom creates a new From instruction and initilises it using information in

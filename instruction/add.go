@@ -1,6 +1,7 @@
 package instruction
 
 import (
+	"fmt"
 	"regexp"
 
 	log "github.com/dihedron/go-log"
@@ -19,6 +20,11 @@ type Add struct {
 	Source string
 	// Destination is the destination path.
 	Destination string
+}
+
+// String returns the Add structure as a string.
+func (a Add) String() string {
+	return fmt.Sprintf("ADD %s %s", a.Source, a.Destination)
 }
 
 // newAdd creates a new Add instruction and initiliases it using information
