@@ -46,7 +46,7 @@ func (f From) String() string {
 
 // newFrom creates a new From instruction and initilises it using information in
 // the token via the associated regular expression.
-func newFrom(token string) ([]Instruction, error) {
+func newFrom(token string) (Instruction, error) {
 	instruction := &From{
 		Token: token,
 	}
@@ -62,5 +62,5 @@ func newFrom(token string) ([]Instruction, error) {
 		instruction.ImageName = &matches[1]
 		log.Infof("FROM: using image name: %q and VM flavour: %q", *instruction.ImageName, instruction.FlavourName)
 	}
-	return []Instruction{instruction}, nil
+	return instruction, nil
 }

@@ -14,7 +14,7 @@ type Instruction interface {
 	// more methods here
 }
 
-func New(index int, token string) ([]Instruction, error) {
+func New(index int, token string) (Instruction, error) {
 	if FROM.MatchString(token) {
 		log.Debugf("found FROM instruction")
 		return newFrom(token)

@@ -29,7 +29,7 @@ func (a Add) String() string {
 
 // newAdd creates a new Add instruction and initiliases it using information
 // extracted from the token via the associated regular expression.
-func newAdd(token string) ([]Instruction, error) {
+func newAdd(token string) (Instruction, error) {
 	instruction := &Add{
 		Token: token,
 	}
@@ -37,5 +37,5 @@ func newAdd(token string) ([]Instruction, error) {
 	instruction.Source = matches[1]
 	instruction.Destination = matches[2]
 	log.Infof("ADD: adding add: %q => %q", instruction.Source, instruction.Destination)
-	return []Instruction{instruction}, nil
+	return instruction, nil
 }

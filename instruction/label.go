@@ -25,39 +25,35 @@ var ITEM = regexp.MustCompile(`\s*(?:(?:"{0,1})([^"]*)(?:"{0,1})="([^"]*)")`)
 type Label struct {
 	// Token is the bare of the instruction, as returned by the Lexer.
 	Token string
-	// Key is the name of the Label.
-	Key string
-	// Value is the value associated with the Label.
-	Value string
+	// Labels is the map of values to store.
+	Labels map[string]string
 }
 
 // newMaintainer creates a new Label instruction and initialises it using
 // information extracted from the token via the associated regular expression.
-func newMaintainer(token string) ([]Instruction, error) {
+func newMaintainer(token string) (Instruction, error) {
 	instruction := &Label{
-		Token: token,
-		Key:   "maintainer",
+		Token:  token,
+		Labels: map[string]string{},
 	}
 	matches := MAINTAINER.FindStringSubmatch(instruction.Token)
-	instruction.Value = matches[1]
-	log.Warnf("MAINTAINER: using deprecated maintainer: %q => %q", instruction.Key, instruction.Value)
-	return []Instruction{instruction}, nil
+	instruction.Labels["maintainer"] = matches[1]
+	log.Warnf("MAINTAINER: using deprecated maintainer: %q => %q", "maintainer", instruction.Labels["maintainer"])
+	return instruction, nil
 }
 
 // newLabel creates one or more new Label instructions and initilises them using
 // information extracteed from the token via the associated regular expression.
-func newLabel(token string) ([]Instruction, error) {
-	instructions := []Instruction{}
+func newLabel(token string) (Instruction, error) {
+	instruction := &Label{
+		Token:  token,
+		Labels: map[string]string{},
+	}
 	matches := LABEL.FindStringSubmatch(token)
 	labels := ITEM.FindAllStringSubmatch(matches[1], -1)
 	for _, label := range labels {
-		instruction := &Label{
-			Token: token,
-			Key:   label[1],
-			Value: label[2],
-		}
-		instructions = append(instructions, instruction)
-		log.Infof("LABEL: adding label: %q => %q", instruction.Key, instruction.Value)
+		instruction.Labels[label[1]] = label[2]
+		log.Infof("LABEL: adding label: %q => %q", label[1], label[2])
 	}
-	return instructions, nil
+	return instruction, nil
 }

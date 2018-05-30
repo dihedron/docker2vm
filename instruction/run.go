@@ -20,12 +20,12 @@ type Run struct {
 
 // newRun creates a new Run instruction and initiliases it using
 // information extracted from the token via the associated regular expression.
-func newRun(token string) ([]Instruction, error) {
+func newRun(token string) (Instruction, error) {
 	instruction := &Run{
 		Token: token,
 	}
 	matches := RUN.FindStringSubmatch(instruction.Token)
 	instruction.Command = matches[1]
 	log.Infof("RUN: adding run: %q", instruction.Command)
-	return []Instruction{instruction}, nil
+	return instruction, nil
 }
